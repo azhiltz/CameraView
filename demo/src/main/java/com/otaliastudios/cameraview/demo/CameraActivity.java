@@ -19,11 +19,15 @@ import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.SessionType;
 import com.otaliastudios.cameraview.Size;
+import com.otaliastudios.cameraview.FrameProcessor;
+import com.otaliastudios.cameraview.Frame;
 
 import java.io.File;
-
+import android.util.Log;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, ControlView.Callback {
+
+    private static final String TAG = "SHOW";
 
     private CameraView camera;
     private ViewGroup controlPanel;
@@ -56,6 +60,18 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+        camera.addFrameProcessor( new FrameProcessor() {
+            @Override
+            public void process( Frame frame ) {
+                byte[] data = frame.getData();
+                int rotation = frame.getRotation();
+                long time = frame.getTime();
+                Size size = frame.getSize();
+                int format = frame.getFormat();
+                String stInfo = size.getWidth() + "," + size.getHeight();
+                Log.i( TAG, stInfo );
+            }
+        });
         findViewById(R.id.edit).setOnClickListener(this);
         findViewById(R.id.capturePhoto).setOnClickListener(this);
         findViewById(R.id.captureVideo).setOnClickListener(this);
